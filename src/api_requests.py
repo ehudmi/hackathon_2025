@@ -3,6 +3,7 @@ import json
 from config import API_KEY, AUTH_TOKEN
 
 URL_FIXED = "https://api.themoviedb.org/3/search/"
+POSTER_URL_FIXED = "https://image.tmdb.org/t/p/w500"
 HEADERS = {
     "accept": "application/json",
     "Authorization": f"Bearer {AUTH_TOKEN}",
@@ -41,9 +42,10 @@ def search_person(name):
         )
 
     return print(persons)
+    # return print(f'{POSTER_URL_FIXED}{persons[0]["known_for"][0]["poster_path"]}')
 
 
-search_person("robert downey")
+# search_person("robert downey")
 
 
 def search_movie(movie):

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import font as tkfont
 from details_window import DetailsWindow
+from api_requests import search_person
 
 
 class SearchBar(tk.Frame):
@@ -132,10 +133,13 @@ class SearchBar(tk.Frame):
         selected_genre_id = self.get_selected_genre_id()
         selected_year = self.spinval.get()
 
-        print(f"Search Text: {search_text}")
-        print(f"Search Type: {search_type}")
-        print(f"Selected Genre ID: {selected_genre_id}")
-        print(f"Selected Year: {selected_year}")
+        if search_type == "person":
+            search_person(search_text)
+        # print(f"Search Text: {search_text}")
+
+        # print(f"Search Type: {search_type}")
+        # print(f"Selected Genre ID: {selected_genre_id}")
+        # print(f"Selected Year: {selected_year}")
 
     def get_selected_genre_id(self):
         # Method to get the selected genre ID
