@@ -52,12 +52,13 @@ def search_movie(movie):
 
     url = URL_FIXED + movie_query
     response = requests.get(url, headers=HEADERS)
-    data2 = json.loads(response.text)
-    # print(data2)
+    data = json.loads(response.text)
+
+    # The API will return partial matches if not exact match
     print(
-        f'Title: {data2["results"][0]["title"]}, Release Date: {data2["results"][0]["release_date"]}'
+        f'Title: {data["results"][0]["title"]}, Release Date: {data["results"][0]["release_date"]}'
     )
-    print(data2["results"][0]["poster_path"])
+    print(data["results"][0]["poster_path"])
 
 
 # search_movie('Gladiator')
