@@ -8,16 +8,21 @@ class SearchBar(tk.Frame):
         super().__init__(master, **kwargs)
 
         # Configure the grid to handle the new widgets
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
+        for i in range(10):
+            if i == 4 or i == 7 or i == 9:
+                self.grid_columnconfigure(i, weight=1)
+            else:
+                self.grid_columnconfigure(i, weight=0)
+
+        self.grid_rowconfigure(0, weight=0, pad=5)
 
         # Call a dedicated method to create all the widgets
         self.create_widgets()
 
     def create_widgets(self):
         # Create a font object for the labels
-        self.label_font = tkfont.Font(family="Helvetica", size=16, weight="bold")
-        self.small_font = tkfont.Font(family="Helvetica", size=12)
+        self.label_font = tkfont.Font(family="Helvetica", size=20, weight="bold")
+        self.small_font = tkfont.Font(family="Helvetica", size=16)
 
         # Main Title Label
         title_label = tk.Label(
@@ -27,52 +32,69 @@ class SearchBar(tk.Frame):
             font=self.label_font,
             bg=self["bg"],
         )
-        title_label.grid(row=0, column=0, columnspan=10, pady=10)
+        title_label.grid(row=0, column=0, columnspan=10, pady=5, sticky="n")
 
         # Search Entry and Label
-        tk.Label(self, text="Search for:", font=self.small_font, bg=self["bg"]).grid(
-            row=1, column=0, padx=5, pady=5, sticky="w"
-        )
+        tk.Label(
+            self, text="Search for:", font=self.small_font, bg=self["bg"], fg="white"
+        ).grid(row=1, column=0, padx=5, pady=5, sticky="nw")
         self.search_parameter = tk.StringVar()
         self.search_box = ttk.Entry(
-            self, textvariable=self.search_parameter, width=20, justify="left"
+            self, textvariable=self.search_parameter, width=30, justify="left"
         )
-        self.search_box.grid(row=1, column=1, padx=5, pady=5)
+        self.search_box.grid(row=1, column=1, padx=10, pady=5, sticky="nw")
+        self.search_box.configure(font=self.small_font)
 
         # Radio Buttons for Search Type
+        style = ttk.Style()
+        style.configure("Custom.TRadiobutton", font=self.small_font)
+
+        tk.Label(
+            self, text="Type:", font=self.small_font, bg=self["bg"], fg="white"
+        ).grid(row=1, column=2, padx=5, pady=5, sticky="nw")
         self.search_type = tk.StringVar(value="title")
-        self.title = ttk.Radiobutton(
-            self, text="Title", variable=self.search_type, value="title"
+        self.title_bttn = ttk.Radiobutton(
+            self,
+            text="Title",
+            variable=self.search_type,
+            value="title",
+            style="Custom.TRadiobutton",
         )
-        self.person = ttk.Radiobutton(
-            self, text="Person", variable=self.search_type, value="person"
+        self.person_bttn = ttk.Radiobutton(
+            self,
+            text="Person",
+            variable=self.search_type,
+            value="person",
+            style="Custom.TRadiobutton",
         )
-        self.title.grid(row=1, column=2, sticky="w")
-        self.person.grid(row=1, column=3, sticky="w")
+        self.title_bttn.grid(row=1, column=3, pady=5, sticky="nw")
+        self.person_bttn.grid(row=1, column=4, pady=5, sticky="nw")
 
         # Listbox for Genre Selection
-        tk.Label(self, text="Select Genre:", font=self.small_font, bg=self["bg"]).grid(
-            row=1, column=4, padx=5, pady=5
-        )
+        tk.Label(
+            self, text="Genre:", font=self.small_font, bg=self["bg"], fg="white"
+        ).grid(row=1, column=5, padx=5, pady=5, sticky="nw")
         self.genre_list = tk.Listbox(self, exportselection=0, height=5, width=15)
-        self.genre_list.grid(row=1, column=5, sticky="ew")
+        self.genre_list.grid(row=1, column=6, sticky="nw")
 
         # Add a scrollbar to the listbox
         scrollbar = ttk.Scrollbar(
             self, orient="vertical", command=self.genre_list.yview
         )
-        scrollbar.grid(row=1, column=6, sticky="ns", padx=(0, 5))
-        self.genre_list.configure(yscrollcommand=scrollbar.set)
+        scrollbar.grid(row=1, column=7, sticky="nsw", padx=(0, 5))
+        self.genre_list.configure(yscrollcommand=scrollbar.set, font=self.small_font)
 
         # Spinbox for Year
-        tk.Label(self, text="Select Year:", font=self.small_font, bg=self["bg"]).grid(
-            row=1, column=7, padx=5, pady=5
-        )
+        tk.Label(
+            self, text="Year:", font=self.small_font, bg=self["bg"], fg="white"
+        ).grid(row=1, column=8, padx=5, pady=5, sticky="nw")
         self.spinval = tk.StringVar()
+        self.spinval.set("2020")
         self.year = ttk.Spinbox(
             self, from_=1890, to=2025, textvariable=self.spinval, width=5
         )
-        self.year.grid(row=1, column=8, padx=5, pady=5, sticky="ew")
+        self.year.grid(row=1, column=9, padx=5, pady=5, sticky="nw")
+        self.year.configure(font=self.small_font)
 
         # Search Button
         # The style configuration for a rounded button
@@ -89,7 +111,7 @@ class SearchBar(tk.Frame):
         self.search_button = ttk.Button(
             self, text="Search", command=self.search, style="Rounded.TButton"
         )
-        self.search_button.grid(row=1, column=9, pady=10)
+        self.search_button.grid(row=2, column=0, columnspan=10, pady=10)
 
         # This is a sample list of dictionaries for genres.
         # In a real app, you would fetch this from the TMDb API.
@@ -164,7 +186,7 @@ class MainApp:
 
         # Configure the grid to make the frames responsive
         self.master.grid_columnconfigure(0, weight=1)
-        self.master.grid_rowconfigure(0, weight=1, minsize=int(window_height * 0.15))
+        self.master.grid_rowconfigure(0, weight=0, minsize=int(window_height * 0.1))
         self.master.grid_rowconfigure(1, weight=5)
 
         self.search_bar = SearchBar(self.master, bg="#444444")
