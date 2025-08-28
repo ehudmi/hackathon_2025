@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import font as tkfont
 from results_frame import ResultsFrame
 from api_requests import search_person, search_movie
+from db_connection import read_from_db
 
 
 class SearchBar(tk.Frame):
@@ -113,16 +114,7 @@ class SearchBar(tk.Frame):
         self.search_button.grid(row=2, column=0, columnspan=10, pady=10)
 
         # Sample genres
-        self.genres = [
-            {"id": 28, "name": "Action"},
-            {"id": 12, "name": "Adventure"},
-            {"id": 16, "name": "Animation"},
-            {"id": 35, "name": "Comedy"},
-            {"id": 80, "name": "Crime"},
-            {"id": 18, "name": "Drama"},
-            {"id": 10751, "name": "Family"},
-            {"id": 14, "name": "Fantasy"},
-        ]
+        self.genres = read_from_db("genres")
         for genre in self.genres:
             self.genre_list.insert(tk.END, genre["name"])
 

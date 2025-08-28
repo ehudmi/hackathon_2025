@@ -95,13 +95,13 @@ def search_movie(title, year):
         )
 
     return movies
-    # print(
-    #     f'Title: {data["results"][0]["title"]}, Release Date: {data["results"][0]["release_date"]}'
-    # )
-    # print(data["results"][0]["poster_path"])
 
 
-# search_movie('Gladiator')
+def get_genres():
+    url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
+    response = requests.get(url, headers=HEADERS)
+    data = json.loads(response.text)
+    return data["genres"]
 
 
 def search_genre(genre):
@@ -113,7 +113,7 @@ def search_genre(genre):
     print(data3["results"][0]["title"])
 
 
-search_genre("28")
+# search_genre("28")
 
 
 def full_list(full):

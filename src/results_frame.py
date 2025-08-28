@@ -1,6 +1,5 @@
 import os
 import tkinter as tk
-from tkinter import ttk
 from tkinter import font as tkfont
 from details_window import DetailsWindow
 from PIL import Image, ImageTk

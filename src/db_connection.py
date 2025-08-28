@@ -18,10 +18,12 @@ connection = psycopg2.connect(
 cursor = connection.cursor()
 
 
-def read_from_db():
-    cursor.execute("SELECT * FROM films")
-    my_movies = cursor.fetchall()
-    return my_movies
+def read_from_db(table_name):
+    cursor.execute(f"SELECT * FROM {table_name}")
+    columns = [desc[0] for desc in cursor.description]
+    rows = cursor.fetchall()
+    data = [dict(zip(columns, row)) for row in rows]
+    return data
 
 
 # def update_movie(film_id:str):
@@ -55,6 +57,17 @@ def insert_person(person_id: str, name, role, photo_url):
     )
     connection.commit()
     return "Person Added Successfully"
+
+
+def create_genres(genres_list):
+    for genre in genres_list:
+        cursor.execute(
+            f"""INSERT INTO genres(genre_id, genre_name)
+                        VALUES ({genre['id']}, '{genre['name']}')
+                        ON CONFLICT (genre_id) DO NOTHING"""
+        )
+    connection.commit()
+    return "Genres Added Successfully"
 
 
 # if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import font as tkfont
 from search_tmdb import SearchTMDBWindow
+from watch_list_window import WatchlistWindow
 
 
 class MainApp:
@@ -62,8 +63,7 @@ class MainApp:
         self.result_font = tkfont.Font(family="Helvetica", size=12)
 
     def open_watchlist(self):
-        # Placeholder for future implementation
-        pass
+        WatchlistWindow(self.master)
 
     def open_search_tmdb(self):
         SearchTMDBWindow(self.master)
