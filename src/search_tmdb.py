@@ -116,7 +116,7 @@ class SearchBar(tk.Frame):
         # Sample genres
         self.genres = read_from_db("genres")
         for genre in self.genres:
-            self.genre_list.insert(tk.END, genre["name"])
+            self.genre_list.insert(tk.END, genre["genre_name"])
 
     def search(self):
         ## This is where your search logic will go.
@@ -144,8 +144,8 @@ class SearchBar(tk.Frame):
             genre_name = self.genre_list.get(index)
             # Find the genre ID that corresponds to the selected name
             for genre in self.genres:
-                if genre["name"] == genre_name:
-                    return genre["id"]
+                if genre["genre_name"] == genre_name:
+                    return genre["genre_id"]
         except IndexError:
             return None  # No genre selected
 
