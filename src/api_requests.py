@@ -79,6 +79,7 @@ def search_movie(title, year):
             {
                 "id": movie["id"],
                 "title": movie["title"],
+                "release_date": movie["release_date"],
                 "overview": movie["overview"],
                 "poster_url": (
                     POSTER_URL_FIXED + movie["poster_path"]

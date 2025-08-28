@@ -8,7 +8,7 @@ class DetailsWindow(tk.Toplevel):
         super().__init__(master)
         self.title("Details")
         self.configure(bg="#222")
-        self.geometry("400x350")
+        self.geometry("600x500")  # Increased size
         font_title = tkfont.Font(family="Helvetica", size=18, weight="bold")
         font_body = tkfont.Font(family="Helvetica", size=14)
         self.item = item
@@ -34,7 +34,7 @@ class DetailsWindow(tk.Toplevel):
                 font=font_body,
                 bg="#222",
                 fg="white",
-                wraplength=350,
+                wraplength=550,  # Increased wraplength for larger window
                 justify="left",
             ).pack(pady=10)
 
@@ -46,7 +46,9 @@ class DetailsWindow(tk.Toplevel):
                 bg="#444",
                 fg="white",
                 command=self.add_to_watchlist,
-            ).pack(pady=10)
+            ).pack(
+                pady=20
+            )  # Increased pady for visibility
 
         elif result_type == "person":
             name = item.get("name", "Unknown Name")
@@ -66,7 +68,7 @@ class DetailsWindow(tk.Toplevel):
                 font=font_body,
                 bg="#222",
                 fg="white",
-                wraplength=350,
+                wraplength=550,
                 justify="left",
             ).pack(pady=10)
         else:

@@ -136,7 +136,12 @@ class WatchlistWindow(tk.Toplevel):
         return films
 
     def delete_selected(self):
-        delete_film()
+        selected_indices = [i for i, var in enumerate(self.check_vars) if var.get()]
+        for idx in selected_indices:
+            film_id = self.records[idx]["film_id"]
+            delete_film(film_id)
+        self.destroy()
+        self.__class__(self.master)
 
     def update_selected(self):
         # TODO: Implement update logic

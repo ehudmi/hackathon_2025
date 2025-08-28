@@ -40,10 +40,25 @@ def delete_film(film_id: str):
 def insert_film(
     film_id: str, title, release_date, overview, genre_ids, backdrop_url, poster_url
 ):
+    # Convert empty release_date to None
+    if not release_date or release_date.strip() == "":
+        release_date = None
+
     cursor.execute(
-        f"""INSERT INTO films(film_id, title, release_date, short_summary, genre_ids,backdrop_url,poster_url)
-                       VALUES ({film_id}, '{title}', '{release_date}', '{overview}', ARRAY{genre_ids},{backdrop_url},{poster_url})
-                       ON CONFLICT (film_id) DO NOTHING"""
+        """
+        INSERT INTO films(film_id, title, release_date, short_summary, genre_ids, backdrop_url, poster_url)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (film_id) DO NOTHING
+        """,
+        (
+            film_id,
+            title,
+            release_date,
+            overview,
+            genre_ids,
+            backdrop_url,
+            poster_url,
+        ),
     )
     connection.commit()
     return "Film Added Successfully"
