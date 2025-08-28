@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import font as tkfont
-from details_window import DetailsWindow
-from api_requests import search_person
+from results_frame import ResultsFrame
+from api_requests import search_person, search_movie
 
 
 class SearchBar(tk.Frame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, results_frame, **kwargs):
         super().__init__(master, **kwargs)
+        self.results_frame = results_frame
         for i in range(10):
             if i == 4 or i == 7 or i == 9:
                 self.grid_columnconfigure(i, weight=1)
@@ -99,7 +100,6 @@ class SearchBar(tk.Frame):
             row=1, column=8, padx=5, pady=(2, 0), sticky="nw"
         )
         self.spinval = tk.StringVar()
-        self.spinval.set("2020")  # Default value
         self.year = ttk.Spinbox(
             self, from_=1890, to=2025, textvariable=self.spinval, width=5
         )
@@ -134,7 +134,11 @@ class SearchBar(tk.Frame):
         selected_year = self.spinval.get()
 
         if search_type == "person":
-            search_person(search_text)
+            results = search_person(search_text)
+            self.results_frame.display_results(results, "person")
+        else:
+            results = search_movie(search_text, selected_year)
+            self.results_frame.display_results(results, "movie")
         # print(f"Search Text: {search_text}")
 
         # print(f"Search Type: {search_type}")
@@ -152,55 +156,6 @@ class SearchBar(tk.Frame):
                     return genre["id"]
         except IndexError:
             return None  # No genre selected
-
-
-class ResultsFrame(tk.Frame):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
-        self.label_font = tkfont.Font(family="Helvetica", size=16, weight="bold")
-        self.result_font = tkfont.Font(family="Helvetica", size=14)
-        self.configure(bg=self["bg"])
-        self.results = []
-        self.result_type = None  # 'movie' or 'person'
-
-    def display_results(self, results, result_type):
-        # Clear previous results
-        for widget in self.winfo_children():
-            widget.destroy()
-        self.results = results
-        self.result_type = result_type
-
-        if not results:
-            tk.Label(
-                self,
-                text="No results found.",
-                font=self.label_font,
-                bg=self["bg"],
-                fg="white",
-            ).grid(row=0, column=0, padx=10, pady=10)
-            return
-
-        for idx, item in enumerate(results):
-            if result_type == "movie":
-                text = item.get("title", "Unknown Title")
-            elif result_type == "person":
-                text = item.get("name", "Unknown Name")
-            else:
-                text = "Unknown"
-
-            btn = tk.Button(
-                self,
-                text=text,
-                font=self.result_font,
-                bg="#333",
-                fg="white",
-                relief="raised",
-                command=lambda i=item: self.open_details(i),
-            )
-            btn.grid(row=idx, column=0, sticky="ew", padx=10, pady=5)
-
-    def open_details(self, item):
-        DetailsWindow(self, item, self.result_type)
 
 
 class SearchTMDBWindow(tk.Toplevel):
@@ -221,11 +176,13 @@ class SearchTMDBWindow(tk.Toplevel):
         self.grid_rowconfigure(0, weight=0, minsize=int(window_height * 0.1))
         self.grid_rowconfigure(1, weight=5)
 
-        self.search_bar = SearchBar(self, bg="#444444")
-        self.search_bar.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
-
         self.results_frame = ResultsFrame(self, bg="#444444")
         self.results_frame.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
+
+        self.search_bar = SearchBar(
+            self, results_frame=self.results_frame, bg="#444444"
+        )
+        self.search_bar.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
 
 if __name__ == "__main__":

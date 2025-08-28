@@ -58,6 +58,9 @@ class MainApp:
         # Make buttons expand horizontally in btn_frame
         btn_frame.grid_columnconfigure(0, weight=1)
 
+        # Result font for labels
+        self.result_font = tkfont.Font(family="Helvetica", size=12)
+
     def open_watchlist(self):
         # Placeholder for future implementation
         pass

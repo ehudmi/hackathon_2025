@@ -25,12 +25,26 @@ def search_person(name):
                 "id": person["id"],
                 "name": person["name"],
                 "role": person["known_for_department"],
+                "photo_url": (
+                    POSTER_URL_FIXED + person.get("profile_path")
+                    if person.get("profile_path") != None
+                    else None
+                ),
                 "known_for": [
                     {
                         "id": item["id"],
                         "title": item.get("title") or item.get("name", "Unknown Title"),
                         "overview": item["overview"],
-                        "poster_path": item["poster_path"],
+                        "poster_url": (
+                            POSTER_URL_FIXED + item["poster_path"]
+                            if item["poster_path"] != None
+                            else None
+                        ),
+                        "backdrop_url": (
+                            POSTER_URL_FIXED + item["backdrop_path"]
+                            if item["backdrop_path"] != None
+                            else None
+                        ),
                         "media_type": item["media_type"],
                         "genre_ids": item["genre_ids"],
                         "release_date": item.get("release_date")
@@ -41,26 +55,50 @@ def search_person(name):
             }
         )
 
-    return print(persons)
+    return persons
     # return print(f'{POSTER_URL_FIXED}{persons[0]["known_for"][0]["poster_path"]}')
 
 
-# search_person("robert downey")
+def search_movie(title, year):
 
-
-def search_movie(movie):
-
-    movie_query = f"movie?query={movie}&include_adult=false&language=en-US&page=1"
+    if year == "":
+        movie_query = f"movie?query={title}&include_adult=false&language=en-US&page=1"
+    else:
+        movie_query = (
+            f"movie?query={title}&include_adult=false&language=en-US&page=1&year={year}"
+        )
 
     url = URL_FIXED + movie_query
     response = requests.get(url, headers=HEADERS)
     data = json.loads(response.text)
 
     # The API will return partial matches if not exact match
-    print(
-        f'Title: {data["results"][0]["title"]}, Release Date: {data["results"][0]["release_date"]}'
-    )
-    print(data["results"][0]["poster_path"])
+    movies = []
+    for movie in data["results"]:
+        movies.append(
+            {
+                "id": movie["id"],
+                "title": movie["title"],
+                "overview": movie["overview"],
+                "poster_url": (
+                    POSTER_URL_FIXED + movie["poster_path"]
+                    if movie["poster_path"] != None
+                    else None
+                ),
+                "backdrop_url": (
+                    POSTER_URL_FIXED + movie["backdrop_path"]
+                    if movie["backdrop_path"] != None
+                    else None
+                ),
+                "genre_ids": movie["genre_ids"],
+            }
+        )
+
+    return movies
+    # print(
+    #     f'Title: {data["results"][0]["title"]}, Release Date: {data["results"][0]["release_date"]}'
+    # )
+    # print(data["results"][0]["poster_path"])
 
 
 # search_movie('Gladiator')
