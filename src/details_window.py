@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import font as tkfont
+from db_connection import insert_film  # Make sure this import is correct
 
 
 class DetailsWindow(tk.Toplevel):
@@ -10,6 +11,8 @@ class DetailsWindow(tk.Toplevel):
         self.geometry("400x350")
         font_title = tkfont.Font(family="Helvetica", size=18, weight="bold")
         font_body = tkfont.Font(family="Helvetica", size=14)
+        self.item = item
+        self.result_type = result_type
 
         if result_type == "movie":
             title = item.get("title", "Unknown Title")
@@ -34,6 +37,17 @@ class DetailsWindow(tk.Toplevel):
                 wraplength=350,
                 justify="left",
             ).pack(pady=10)
+
+            # Add to Watchlist button
+            tk.Button(
+                self,
+                text="Add to Watchlist",
+                font=font_body,
+                bg="#444",
+                fg="white",
+                command=self.add_to_watchlist,
+            ).pack(pady=10)
+
         elif result_type == "person":
             name = item.get("name", "Unknown Name")
             known_for = ", ".join(
@@ -63,3 +77,23 @@ class DetailsWindow(tk.Toplevel):
                 bg="#222",
                 fg="white",
             ).pack(pady=10)
+
+    def add_to_watchlist(self):
+        # Only add if it's a movie
+        if self.result_type == "movie":
+            film_id = str(self.item.get("id", ""))
+            title = self.item.get("title", "")
+            release_date = self.item.get("release_date", "")
+            overview = self.item.get("overview", "")
+            genre_ids = self.item.get("genre_ids", [])
+            backdrop_url = self.item.get("backdrop_url", "")
+            poster_url = self.item.get("poster_url", "")
+            insert_film(
+                film_id,
+                title,
+                release_date,
+                overview,
+                genre_ids,
+                backdrop_url,
+                poster_url,
+            )
