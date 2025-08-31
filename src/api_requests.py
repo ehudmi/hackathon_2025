@@ -10,6 +10,7 @@ HEADERS = {
 }
 
 
+# use the search API for person
 def search_person(name):
 
     person_query = f"person?query={name}&include_adult=false&language=en-US&page=1"
@@ -59,6 +60,7 @@ def search_person(name):
     # return print(f'{POSTER_URL_FIXED}{persons[0]["known_for"][0]["poster_path"]}')
 
 
+# use the search API for movie and optionally year (if present)
 def search_movie(title, year):
 
     if year == "":
@@ -98,6 +100,7 @@ def search_movie(title, year):
     return movies
 
 
+# get the info for the genres table to populate
 def get_genres():
     url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
     response = requests.get(url, headers=HEADERS)
@@ -105,6 +108,7 @@ def get_genres():
     return data["genres"]
 
 
+# search by genre (not implemented yet)
 def search_genre(genre):
 
     url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres={genre}"

@@ -6,6 +6,7 @@ from api_requests import search_person, search_movie
 from db_connection import read_from_db
 
 
+# The Search Bar Frame
 class SearchBar(tk.Frame):
     def __init__(self, master, results_frame, **kwargs):
         super().__init__(master, **kwargs)
@@ -150,6 +151,7 @@ class SearchBar(tk.Frame):
             return None  # No genre selected
 
 
+# The main frame including the other frames
 class SearchTMDBWindow(tk.Toplevel):
     def __init__(self, master):
         super().__init__(master)
